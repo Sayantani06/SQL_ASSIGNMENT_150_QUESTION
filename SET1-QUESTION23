@@ -1,0 +1,29 @@
+--Question23:Write an SQL query to find the average selling price for each product. average_price should be rounded to 2 decimal places.
+ 
+CREATE TABLE PRICES (Product_id int, 
+start_date date,
+ end_date date ,
+ price int,
+ PRIMARY KEY(product_id, start_date, end_date));
+ 
+ CREATE TABLE UNITS_SOLD(Product_id int,
+ purchase_date date,
+ units int);
+ 
+ INSERT INTO PRICES(PRODUCT_ID,START_DATE,END_DATE,PRICE) VALUES(1,'2019-02-17', '2019-02-28',5),
+ (1,'2019-03-01', '2019-03-22', 20),
+ (2, '2019-02-01','2019-02-20', 15),
+ (2,'2019-02-21', '2019-03-31', 30);
+ 
+ INSERT INTO UNITS_SOLD(Product_id, purchase_date, units) values(1 ,'2019-02-25', 100),
+ (1,'2019-03-01',15),
+ (2,'2019-02-10', 200),
+ (2,'2019-03-22', 30);
+ 
+ SELECT PRICES.PRODUCT_ID,
+ ROUND((sum(PRICES.PRICE*UNITS_SOLD.UNITS))/SUM(UNITS_SOLD.UNITS),2) AS AVERAGE_PRICE
+ FROM PRICES JOIN UNITS_SOLD 
+ ON PRICES.PRODUCT_ID = UNITS_SOLD.PRODUCT_ID 
+ AND UNITS_SOLD.PURCHASE_DATE between PRICES.START_DATE and PRICES.END_DATE
+ GROUP BY PRICES.PRODUCT_ID;
+ 
