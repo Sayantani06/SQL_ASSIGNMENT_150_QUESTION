@@ -1,0 +1,2 @@
+--QUESTION1:Query all columns for all american cities in the city table with populations larger than 100000. The country code for america is USA.
+Ans: Select * from city where population > 100000 and countrycode='USA';
