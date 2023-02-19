@@ -1,0 +1,29 @@
+--question26: Write an SQL query to get the names of products that have at least 100 units ordered in February 2020 and their amount.
+
+create TABLE PRODUCTS( product_id int, product_name varchar(60), product_category varchar(60));
+
+INSERT INTO PRODUCTS(PRODUCT_ID,PRODUCT_NAME,PRODUCT_CATEGORY) 
+valueS(1,'Leetcode Solutions', 'Book '),
+(2,'Jewels of Stringology', 'Book'),
+(3,'HP','Laptop'),
+(4,'Lenovo', 'Laptop'),
+( 5, 'Leetcode Kit', 'T-shirt');
+
+CREATE TABLE ORDERS(product_id int, order_date date, unit int);
+
+INSERT INTO ORDERS(PRODUCT_ID,ORDER_DATE,UNIT) VALUES(1,'2020-02-05',60 ),
+(1,'2020-02-10', 70),
+(2,'2020-01-18', 30),
+(2,'2020-02-11',80),
+(3,'2020-02-17',2),
+(3,'2020-02-24',3),
+( 4,' 2020-03-01',20),
+( 4,'2020-03-04',30);
+
+SELECT PRODUCTS.PRODUCT_NAME , SUM(ORDERS.UNIT)
+ FROM PRODUCTS JOIN ORDERS
+ ON PRODUCTS.PRODUCT_ID =ORDERS.PRODUCT_ID 
+ WHERE ORDERS.ORDER_DATE BETWEEN  '2020-02-01' AND '2020-02-28'
+ GROUP BY PRODUCTS.PRODUCT_NAME
+HAVING SUM(ORDERS.UNIT) >100 ;
+ 
