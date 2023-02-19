@@ -1,0 +1,22 @@
+CREATE TABLE delivery
+(
+  delivery_id INT,
+  customer_id INT,
+  order_date DATE,
+  customer_pref_delivery_date DATE
+);
+
+INSERT INTO delivery VALUES(1, 1, '2019-08-01', '2019-08-02');
+INSERT INTO delivery VALUES(2, 5, '2019-08-02', '2019-08-02');
+INSERT INTO delivery VALUES(3, 1, '2019-08-11', '2019-08-11');
+INSERT INTO delivery VALUES(4, 3, '2019-08-24', '2019-08-26');
+INSERT INTO delivery VALUES(5, 4, '2019-08-21', '2019-08-22');
+INSERT INTO delivery VALUES(6, 2, '2019-08-11', '2019-08-13');
+
+--Question: delivery_id is the primary key of this table. 
+The table holds information about food delivery to customers that make orders at some date and specify a preferred delivery date (on the same order date or after it). If the customer's preferred delivery date is the same as the order date, then the order is called immediately; 
+otherwise, it is called scheduled. Write an SQL query to find the percentage of immediate orders in the table, rounded to 2 decimal places.
+
+
+Select (count(delivery_id)/(Select count(delivery_id) from delivery))*100 
+as immediate_percentage from delivery where order_date = CUSTOMER_PREF_DELIEVERY_DATE;
