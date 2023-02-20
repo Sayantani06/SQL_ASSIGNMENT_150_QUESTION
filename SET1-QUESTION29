@@ -1,0 +1,34 @@
+
+
+CREATE TABLE tv_program
+(
+  program_date DATE,
+  content_id INT,
+  channel VARCHAR(30),
+  CONSTRAINT pk_tv_program PRIMARY KEY(program_date, content_id)
+);
+
+CREATE TABLE content
+(
+  content_id INT,
+  title VARCHAR(50),
+  kids_content ENUM('Y', 'N'),
+  content_type VARCHAR(20),
+  CONSTRAINT pk_content PRIMARY KEY(content_id)
+);
+
+INSERT INTO tv_program VALUES('2020-06-10 08:00', 1, 'LC-Channel');
+INSERT INTO tv_program VALUES('2020-05-11 12:00', 2, 'LC-Channel');
+INSERT INTO tv_program VALUES('2020-05-12 12:00', 3, 'LC-Channel');
+INSERT INTO tv_program VALUES('2020-05-13 14:00', 4, 'Disney Ch');
+INSERT INTO tv_program VALUES('2020-06-18 14:00', 4, 'Disney Ch');
+INSERT INTO tv_program VALUES('2020-07-15 16:00', 5, 'Disney Ch');
+
+INSERT INTO content VALUES(1, 'Leetcode Movie', 'N', 'Movies');
+INSERT INTO content VALUES(2, 'Alg. for Kids', 'Y', 'Series');
+INSERT INTO content VALUES(3, 'Database Sols', 'N', 'Series');
+INSERT INTO content VALUES(4, 'Aladdin', 'Y', 'Movies');
+INSERT INTO content VALUES(5, 'Cinderella', 'Y', 'Movies');
+
+SELECT CONTENT.TITLE FROM CONTENT JOIN tv_program ON CONTENT.CONTENT_ID= tv_program.CONTENT_ID
+WHERE CONTENT.CONTENT_TYPE='MOVIES' AND CONTENT.KIDS_CONTENT='Y' AND tv_program.PROGRAM_DATE LIKE '2020-06%';
