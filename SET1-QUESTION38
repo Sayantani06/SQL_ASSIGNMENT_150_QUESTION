@@ -1,0 +1,38 @@
+The table has information about the id of each student at a university and the id of the department he/she studies at. 
+Write an SQL query to find the id and the name of all students who are enrolled in departments that no longer exist.
+Return the result table in any order.
+
+
+CREATE TABLE departments
+(
+  id INT,
+  name VARCHAR(30),
+  CONSTRAINT pk_department PRIMARY KEY(id)
+);
+
+CREATE TABLE students
+(
+  id INT,
+  name VARCHAR(30),
+  department_id INT,
+  CONSTRAINT pk_students PRIMARY KEY(id)
+);
+
+
+INSERT INTO departments VALUES(1, 'Electrical Engineering');
+INSERT INTO departments VALUES(7, 'Computer Engineering');
+INSERT INTO departments VALUES(13, 'Business Administration');
+
+INSERT INTO students VALUES(23, 'Alice', 1);
+INSERT INTO students VALUES(1, 'Bob', 7);
+INSERT INTO students VALUES(5, 'Jennifer', 13);
+INSERT INTO students VALUES(2, 'John', 14);
+INSERT INTO students VALUES(4, 'Jasmine', 77);
+INSERT INTO students VALUES(3, 'Steve', 74);
+INSERT INTO students VALUES(6, 'Luis', 1);
+INSERT INTO students VALUES(8, 'Jonathan', 7);
+INSERT INTO students VALUES(7, 'Daiana', 33);
+INSERT INTO students VALUES(11, 'Madelynn', 1);
+
+
+SELECT NAME ,ID FROM STUDENTS WHERE DEPARTMENT_ID NOT IN (SELECT ID FROM DEPARTMENTS);
