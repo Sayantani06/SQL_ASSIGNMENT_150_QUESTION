@@ -1,0 +1,30 @@
+Write an SQL query to show the unique ID of each user, If a user does not have a unique ID replace just show null.
+
+CREATE TABLE employees
+(
+  id INT,
+  name VARCHAR(30),
+  CONSTRAINT pk_employees PRIMARY KEY(id)
+);
+
+CREATE TABLE employee_uni
+(
+  id INT,
+  unique_id INT,
+  CONSTRAINT pk_employee_uni PRIMARY KEY(id, unique_id)
+);
+
+
+INSERT INTO employees VALUES(1, 'Alice');
+INSERT INTO employees VALUES(7, 'Bob');
+INSERT INTO employees VALUES(11, 'Meir');
+INSERT INTO employees VALUES(90, 'Winston');
+INSERT INTO employees VALUES(3, 'Jonathan');
+
+INSERT INTO employee_uni VALUES(3, 1);
+INSERT INTO employee_uni VALUES(11, 2);
+INSERT INTO employee_uni VALUES(90, 3);
+
+
+SELECT EMPLOYEES.NAME , EMPLOYEE_UNI.UNIQUE_ID FROM EMPLOYEES LEFT JOIN EMPLOYEE_UNI ON
+employeeS.ID =EMPLOYEE_UNI.ID ORDER BY EMPLOYEES.NAME;
