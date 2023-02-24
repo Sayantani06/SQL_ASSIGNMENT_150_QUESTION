@@ -1,0 +1,37 @@
+Write an SQL query to report the number of cubic feet of volume the inventory occupies in each warehouse. 
+Return the result table in any order.
+
+
+CREATE TABLE warehouse
+(
+  name VARCHAR(30),
+  product_id INT,
+  units INT,
+  CONSTRAINT pk_warehouse PRIMARY KEY(name, product_id)
+);
+
+CREATE TABLE products
+(
+  product_id INT,
+  product_name VARCHAR(30),
+  width INT,
+  length INT,
+  height INT,
+  CONSTRAINT pk_products PRIMARY KEY(product_id)
+);
+
+INSERT INTO warehouse VALUES('LCHouse1', 1, 1);
+INSERT INTO warehouse VALUES('LCHouse1', 2, 10);
+INSERT INTO warehouse VALUES('LCHouse1', 3, 5);
+INSERT INTO warehouse VALUES('LCHouse2', 1, 2);
+INSERT INTO warehouse VALUES('LCHouse2', 2, 2);
+INSERT INTO warehouse VALUES('LCHouse3', 4, 1);
+
+INSERT INTO products VALUES(1, 'LC-TV', 5, 50, 40);
+INSERT INTO products VALUES(2, 'LC-KeyChain', 5, 5, 5);
+INSERT INTO products VALUES(3, 'LC-Phone', 2, 10, 10);
+INSERT INTO products VALUES(4, 'LC-T-Shirt', 4, 10, 20);
+
+SELECT DISTINCT(WAREHOUSE.NAME),SUM(WAREHOUSE.UNITS*(PRODUCTS.WIDTH*PRODUCTS.LENGTH*PRODUCTS.HEIGHT)) AS VOLUME 
+FROM WAREHOUSE JOIN PRODUCTS ON WAREHOUSE.PRODUCT_ID=PRODUCTS.PRODUCT_ID
+GROUP BY WAREHOUSE.NAME;
