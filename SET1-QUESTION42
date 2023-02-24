@@ -1,0 +1,32 @@
+Write an SQL query to report the difference between the number of apples and oranges sold each day.
+Return the result table ordered by sale_date.
+
+
+DROP TABLE SALES;
+CREATE TABLE sales
+(
+  sale_date DATE,
+  fruit VARCHAR(10),
+  sold_num INT,
+  CONSTRAINT pk_sales PRIMARY KEY(sale_date, fruit)
+);
+
+INSERT INTO sales VALUES('2020-05-01', 'apples', 10);
+INSERT INTO sales VALUES('2020-05-01', 'oranges', 8);
+INSERT INTO sales VALUES('2020-05-02', 'apples', 15);
+INSERT INTO sales VALUES('2020-05-02', 'oranges', 15);
+INSERT INTO sales VALUES('2020-05-03', 'apples', 20);
+INSERT INTO sales VALUES('2020-05-03', 'oranges', 0);
+INSERT INTO sales VALUES('2020-05-04', 'apples', 15);
+INSERT INTO sales VALUES('2020-05-04', 'oranges', 16);
+
+WITH APPLE_DETAILS(SALE_DATE, SOLD_NUM)
+AS
+(SELECT SALE_DATE,SOLD_NUM FROM SALES WHERE FRUIT='APPLES'),
+ ORANGE_DETAILS(SALE_DATE, SOLD_NUM) AS
+(SELECT SALE_DATE,SOLD_NUM FROM SALES WHERE FRUIT='ORANGES')
+SELECT APPLE_DETAILS.SALE_DATE,(APPLE_DETAILS.SOLD_NUM-ORANGE_DETAILS.SOLD_NUM) AS DIFFERENCE
+FROM APPLE_DETAILS,ORANGE_DETAILS 
+WHERE
+APPLE_DETAILS.SALE_DATE=ORANGE_DETAILS.SALE_DATE;
+
