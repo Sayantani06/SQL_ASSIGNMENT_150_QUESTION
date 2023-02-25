@@ -1,0 +1,28 @@
+Write an SQL query to report the customer
+ids from the Customer table that bought all the products in the Product table. 
+Return the result table in any order.
+
+CREATE TABLE customer
+(
+  customer_id INT,
+  product_key INT
+);
+
+CREATE TABLE product
+(
+  product_key INT,
+  CONSTRAINT pk_product PRIMARY KEY(product_key)
+);
+
+INSERT INTO customer VALUES(1, 5);
+INSERT INTO customer VALUES(2, 6);
+INSERT INTO customer VALUES(3, 5);
+INSERT INTO customer VALUES(3, 6);
+INSERT INTO customer VALUES(1, 6);
+
+INSERT INTO product VALUES(5);
+INSERT INTO product VALUES(6);
+
+Select customer_id from (SELECT CUSTOMER_ID,
+RANK() OVER(partition by CUSTOMER_ID order by product_key) as count_of_product from customer) temp 
+where count_of_product=2;
