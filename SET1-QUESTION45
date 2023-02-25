@@ -1,0 +1,37 @@
+Write an SQL query to report the respective department name and number of students majoring in each department for all departments in
+the Department table (even ones with no current students). 
+Return the result table ordered by student_number in descending order. In case of a tie, order them by dept_name alphabetically
+
+
+
+CREATE TABLE department
+(
+  dept_id INT,
+  dept_name VARCHAR(30),
+  CONSTRAINT pk_department PRIMARY KEY(dept_id)
+);
+
+CREATE TABLE student
+(
+  student_id INT,
+  student_name VARCHAR(30),
+  gender VARCHAR(1),
+  dept_id INT,
+  CONSTRAINT pk_student PRIMARY KEY(student_id),
+  CONSTRAINT fk_department FOREIGN KEY (dept_id)
+    REFERENCES department(dept_id) 
+);
+
+INSERT INTO department VALUES(1, 'Engineering');
+INSERT INTO department VALUES(2, 'Science');
+INSERT INTO department VALUES(3, 'Law');
+
+INSERT INTO student VALUES(1, 'Jack', 'M', 1);
+INSERT INTO student VALUES(2, 'Jane', 'F', 1);
+INSERT INTO student VALUES(3, 'Mark', 'M', 2);
+
+
+SELECT DEPARTMENT.DEPT_NAME,COUNT(STUDENT.STUDENT_ID)
+ FROM DEPARTMENT LEFT JOIN STUDENT 
+ ON DEPARTMENT.DEPT_ID = STUDENT.DEPT_ID 
+ GROUP BY DEPARTMENT.DEPT_NAME;
