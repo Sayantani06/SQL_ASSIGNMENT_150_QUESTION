@@ -1,0 +1,35 @@
+
+
+CREATE TABLE customer
+(
+  id INT,
+  name VARCHAR(25),
+  referee_id BIGINT,
+  CONSTRAINT pk_customer PRIMARY KEY (id)
+);
+
+INSERT INTO customer VALUES(1, 'Will', null);
+INSERT INTO customer VALUES(2, 'Jane', null);
+INSERT INTO customer VALUES(3, 'Alex', 2);
+INSERT INTO customer VALUES(4, 'Bill', null);
+INSERT INTO customer VALUES(5, 'Zack', 1);
+INSERT INTO customer VALUES(6, 'Mark', 2);
+
+
+IN MYSQL WORKBENCH:
+select name from customer where id<>2;
+
+IN PLSQL:
+declare 
+name1 customer.name%type;
+cursor name_cursor is select name from customer where id <>2;
+begin 
+open name_cursor;
+loop 
+fetch name_cursor into name1;
+exit when name_cursor%notfound;
+dbms_output.put_line(name1);
+end loop;
+close name_cursor;
+end;
+
