@@ -1,0 +1,40 @@
+Write a SQL query to find the highest grade with its corresponding course for each student. 
+In case of a tie, you should find the course with the smallest course_id. 
+Return the result table ordered by student_id in ascending order. T
+
+CREATE TABLE enrollments
+(
+  student_id INT,
+  course_id INT,
+  grade INT,
+  CONSTRAINT pk_enrollments PRIMARY KEY(student_id, course_id)
+);
+
+INSERT INTO enrollments VALUES(2, 2, 95);
+INSERT INTO enrollments VALUES(2, 3, 95);
+INSERT INTO enrollments VALUES(1, 1, 90);
+INSERT INTO enrollments VALUES(1, 2, 99);
+INSERT INTO enrollments VALUES(3, 1, 80);
+INSERT INTO enrollments VALUES(3, 2, 75);
+INSERT INTO enrollments VALUES(3, 3, 82);
+
+
+SELECT DISTINCT(STUDENT_ID),COURSE_ID, GRADE 
+FROM enrollments WHERE (STUDENT_ID,GRADE) 
+IN (SELECT  DISTINCT(STUDENT_ID), MAX(GRADE) FROM ENROLLMENTS
+ GROUP BY STUDENT_ID)
+ ORDER BY GRADE DESC, COURSE_ID ASC LIMIT 3;
+ 
+ 
+ 
+ SELECT STUDENT_ID, COURSE_ID,GRADE 
+ FROM
+ (select student_id,course_id, GRADE,
+ RANK() OVER( PARTITION BY STUDENT_ID ORDER BY COURSE_ID ASC) AS RANK2 
+ FROM
+ (SELECT STUDENT_ID,COURSE_ID,GRADE,
+ RANK() OVER( PARTITION BY STUDENT_ID ORDER BY GRADE DESC) 
+ AS RANKS FROM enrollments) TEMP
+ WHERE RANKS=1)
+ TEMP2 WHERE RANK2=1 ;
+ 
