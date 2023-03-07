@@ -1,0 +1,73 @@
+
+
+CREATE TABLE customers
+(
+  id INT,
+  name VARCHAR(25),
+  CONSTRAINT pk_customers PRIMARY KEY (id)
+);
+
+CREATE TABLE orders
+(
+  id INT,
+  customer_id INT,
+  CONSTRAINT pk_orders PRIMARY KEY (id),
+  CONSTRAINT fk_customer_order FOREIGN KEY(customer_id)
+    REFERENCES customers(id)
+);
+
+INSERT INTO customers VALUES(1, 'Joe');
+INSERT INTO customers VALUES(2, 'Henry');
+INSERT INTO customers VALUES(3, 'Sam');
+INSERT INTO customers VALUES(4, 'Max');
+
+INSERT INTO orders VALUES(1, 3);
+INSERT INTO orders VALUES(2, 1);
+
+MYSQL WORKBENCH:
+SELECT NAME FROM CUSTOMERS WHERE ID NOT IN(select CUSTOMER_ID FROM ORDERS);
+
+
+CREATE TABLE customers
+(
+  id INT,
+  name VARCHAR(25),
+  CONSTRAINT pk_customers PRIMARY KEY (id)
+);
+
+CREATE TABLE orders
+(
+  id INT,
+  customer_id INT,
+  CONSTRAINT pk_orders PRIMARY KEY (id),
+  CONSTRAINT fk_customer_order FOREIGN KEY(customer_id)
+    REFERENCES customers(id)
+);
+
+INSERT INTO customers VALUES(1, 'Joe');
+INSERT INTO customers VALUES(2, 'Henry');
+INSERT INTO customers VALUES(3, 'Sam');
+INSERT INTO customers VALUES(4, 'Max');
+
+INSERT INTO orders VALUES(1, 3);
+INSERT INTO orders VALUES(2, 1);
+
+
+PL/SQL:
+declare 
+name1 customers.name%type;
+cursor name_cursor is select name from customers where ID not in(SELECT CUSTOMER_ID FROM ORDERS);
+begin 
+open name_cursor;
+loop 
+fetch name_cursor into name1;
+exit when name_cursor%notfound;
+dbms_output.put_line(name1);
+end loop;
+close name_cursor;
+end;
+
+
+
+
+
