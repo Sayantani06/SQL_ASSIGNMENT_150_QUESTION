@@ -1,0 +1,20 @@
+
+
+CREATE TABLE activity
+(
+  player_id INT,
+  device_id INT,
+  event_date DATE,
+  games_played INT
+);
+
+INSERT INTO activity VALUES(1, 2, '2016-03-01', 5);
+INSERT INTO activity VALUES(1, 2, '2016-05-02', 6);
+INSERT INTO activity VALUES(2, 3, '2017-06-25', 1);
+INSERT INTO activity VALUES(3, 1, '2016-03-02', 0);
+INSERT INTO activity VALUES(3, 4, '2018-07-03', 5);
+
+
+Select player_id,device_id from (select player_id
+,device_id,event_date,
+rank() over(partition by player_id order by event_date) as log_in_stat from activity)temp where log_in_stat=1;
