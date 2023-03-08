@@ -1,0 +1,17 @@
+
+
+
+CREATE TABLE orders
+(
+  order_number INT,
+  customer_number INT,
+  CONSTRAINT pk_orders PRIMARY KEY (order_number)
+);
+
+INSERT INTO orders VALUES(1, 1);
+INSERT INTO orders VALUES(2, 2);
+INSERT INTO orders VALUES(3, 3);
+INSERT INTO orders VALUES(4, 3);
+
+Select customer_number from (select customer_number , rank () over(partition by customer_number order by order_number) 
+as no_order from orders)temp where no_order=2 ;
