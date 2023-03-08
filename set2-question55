@@ -1,0 +1,86 @@
+A telecommunications company wants to invest in new countries. The company intends to invest in the countries where 
+the average call duration of the calls in this country is strictly greater than the global average call duration. 
+Write an SQL query to find the countries where this company can invest. Return the result table in any order.
+
+CREATE TABLE person
+(
+  id INT,
+  name VARCHAR(25),
+  phone_number VARCHAR(11),
+  CONSTRAINT pk_person PRIMARY KEY (id)
+);
+
+CREATE TABLE country
+(
+  name VARCHAR(25),
+  country_code VARCHAR(3),
+  CONSTRAINT pk_country PRIMARY KEY (country_code)
+);
+
+CREATE TABLE calls
+(
+  caller_id INT,
+  callee_id INT,
+  duration INT
+);
+
+INSERT INTO person VALUES(3, 'Jonathan', '051-1234567');
+INSERT INTO person VALUES(12, 'Elvis', '051-7654321');
+INSERT INTO person VALUES(1, 'Moncef', '212-1234567');
+INSERT INTO person VALUES(2, 'Maroua', '212-6523651');
+INSERT INTO person VALUES(7, 'Meir', '972-1234567');
+INSERT INTO person VALUES(9, 'Rachel', '972-0011100');
+
+INSERT INTO country VALUES('Peru', '51');
+INSERT INTO country VALUES('Israel', '972');
+INSERT INTO country VALUES('Morocco', '212');
+INSERT INTO country VALUES('Germany', '49');
+INSERT INTO country VALUES('Ethiopia', '251');
+
+INSERT INTO calls VALUES(1, 9, 33);
+INSERT INTO calls VALUES(2, 9, 4);
+INSERT INTO calls VALUES(1, 2, 59);
+INSERT INTO calls VALUES(3, 12, 102);
+INSERT INTO calls VALUES(3, 12, 330);
+INSERT INTO calls VALUES(12, 3, 5);
+INSERT INTO calls VALUES(7, 9, 13);
+INSERT INTO calls VALUES(7, 1, 3);
+INSERT INTO calls VALUES(9, 7, 1);
+INSERT INTO calls VALUES(1, 7, 7);
+
+
+
+
+
+WITH receiver_caller_calls AS(
+  SELECT
+    caller_id AS caller_receiver_id,
+    duration
+  FROM
+    calls
+  UNION ALL
+  SELECT
+    callee_id AS caller_receiver_id,
+    duration
+  FROM
+    calls
+),
+call_duration_avg AS(
+  SELECT
+    DISTINCT cn.name,
+    avg(c.duration) OVER() as global_average,
+    avg(c.duration) OVER(PARTITION BY cn.name) as country_average
+  FROM 
+    person p
+    JOIN country cn 
+      ON  CAST(SUBSTRING_INDEX(p.phone_number, '-', 1) AS UNSIGNED) =  CAST(cn.country_code AS UNSIGNED)
+    JOIN receiver_caller_calls c
+      ON c.caller_receiver_id = p.id
+)
+SELECT
+  name
+FROM
+  call_duration_avg
+WHERE
+  country_average > global_average
+;
