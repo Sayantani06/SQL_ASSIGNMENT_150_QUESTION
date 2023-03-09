@@ -1,0 +1,21 @@
+
+
+
+CREATE TABLE triangle
+(
+  x INT,
+  y INT,
+  z INT,
+  CONSTRAINT pk_triangle PRIMARY KEY (x,y,z)
+);
+
+INSERT INTO triangle VALUES(13, 15, 30);
+INSERT INTO triangle VALUES(10, 20, 15);
+
+
+Select *,
+case 
+when x+y>z and y+z>x and x+z>y then "yes"
+else "no"
+end as triangle 
+from triangle;
