@@ -1,0 +1,23 @@
+Write an SQL query to report all the consecutive available seats in the cinema. 
+Return the result table ordered by seat_id in ascending order. 
+The test cases are generated so that more than two seats are consecutively available.
+
+
+CREATE TABLE cinema
+(
+  seat_id INT AUTO_INCREMENT,
+  free BOOLEAN,
+  CONSTRAINT pk_cinema PRIMARY KEY (seat_id)
+);
+
+INSERT INTO cinema(free) VALUES(TRUE);
+INSERT INTO cinema(free) VALUES(FALSE);
+INSERT INTO cinema(free) VALUES(TRUE);
+INSERT INTO cinema(free) VALUES(TRUE);
+INSERT INTO cinema(free) VALUES(TRUE);
+
+
+
+With serial_number as
+(Select seat_id, seat_id-lead(seat_id) over(order by seat_id) as serial1 from cinema where free=1)
+Select seat_id from serial_number where serial1=-1 or serial1 is null;
