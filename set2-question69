@@ -1,0 +1,25 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Select start_id, end_id from (Select log_id as start_id, lead(log_id) over(order by log_id) as end_id,
+log_id-lead(log_id) over(order by log_id) as diff from logs) temp where diff=-1;
