@@ -1,0 +1,35 @@
+Write an SQL query to find for each month and country,
+the number of transactions and their total amount, the number of approved transactions and their total amount.
+
+
+
+CREATE TABLE transactions
+(
+  id INT,
+  country VARCHAR(25),
+  state VARCHAR(15),
+  amount INT,
+  trans_date DATE,
+  CONSTRAINT pk_trx PRIMARY KEY(id)
+);
+
+INSERT INTO transactions VALUES(121, 'US', 'approved', 1000, '2018-12-18');
+INSERT INTO transactions VALUES(122, 'US', 'declined', 2000, '2018-12-19');
+INSERT INTO transactions VALUES(123, 'US', 'approved', 2000, '2019-01-01');
+INSERT INTO transactions VALUES(124, 'DE', 'approved', 2000, '2019-01-07');
+
+
+With approved_list(country,trans_date,amount,apr_count) as
+(Select distinct(country),date_format(trans_date,"%Y-%c") as months,
+ sum(amount) as total_amount ,
+ count(date_format(trans_date,"%Y-%c")) as apr_count from transactions  where state='approved'
+group by country,date_format(trans_date,"%Y-%c")),
+total_sum( country,trans_date,amount,tot_count) as
+(Select distinct(country),date_format(trans_date,"%Y-%c") as months,
+ sum(amount) as total_amount,
+ count(date_format(trans_date,"%Y-%c")) as tot_count from transactions 
+group by country,date_format(trans_date,"%Y-%c"))
+Select t.country,t.trans_date,t.tot_count as toatl_count,a.apr_count as approved_count,
+t.amount as total_amount,
+a.amount as approved_amount
+from total_sum t join approved_list a on t.country=a.country and t.trans_date =a.trans_date;
