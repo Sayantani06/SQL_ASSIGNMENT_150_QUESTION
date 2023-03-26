@@ -1,0 +1,61 @@
+
+Write an SQL query to find the number of times each student attended each exam. Return the result table ordered by student_id and subject_name.
+
+
+
+CREATE TABLE students
+(
+  student_id INT,
+  student_name VARCHAR(25),
+  CONSTRAINT pk_students PRIMARY KEY (student_id)
+);
+
+CREATE TABLE subjects
+(
+  subject_name VARCHAR(25),
+  CONSTRAINT pk_students PRIMARY KEY (subject_name)
+);
+
+CREATE TABLE examinations
+(
+  student_id INT,
+  subject_name VARCHAR(25)
+);
+
+INSERT INTO students VALUES(1, 'Alice');
+INSERT INTO students VALUES(2, 'Bob');
+INSERT INTO students VALUES(13, 'John');
+INSERT INTO students VALUES(6,'Alex');
+
+INSERT INTO subjects VALUES('Math');
+INSERT INTO subjects VALUES('Physics');
+INSERT INTO subjects VALUES('Programming');
+
+INSERT INTO examinations VALUES(1,'Math');
+INSERT INTO examinations VALUES(1, 'Physics');
+INSERT INTO examinations VALUES(1, 'Programming');
+INSERT INTO examinations VALUES(2, 'Programming');
+INSERT INTO examinations VALUES(1, 'Physics');
+INSERT INTO examinations VALUES(1, 'Math');
+INSERT INTO examinations VALUES(13, 'Math');
+INSERT INTO examinations VALUES(13, 'Programming');
+INSERT INTO examinations VALUES(13, 'Physics');
+INSERT INTO examinations VALUES(2, 'Math');
+INSERT INTO examinations VALUES(1, 'Math');
+
+
+
+
+Select student_id,subject_name,student_name, 
+case when student_id is not null then max(output) 
+else 0
+end as attended_exam
+from  
+(Select e.student_id as student_id,sb.subject_name as subject_name,s.Student_name as student_name,
+row_number() over(partition by e.subject_name,s.student_name order by e.student_id) as output
+ from students s join subjects sb left join examinations e on e.subject_name= sb.subject_name and s.student_id=e.student_id)
+ temp group by student_id,subject_name,student_name order by  student_id,student_name ;
+ 
+ 
+ 
+ 
