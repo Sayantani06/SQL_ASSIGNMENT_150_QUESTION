@@ -1,0 +1,24 @@
+Write an SQL query to find employee_id of all employees that directly or indirectly report their work to the head of the company.
+
+
+CREATE TABLE employees
+(
+  employee_id INT,
+  employee_name VARCHAR(25),
+  manager_id INT,
+  CONSTRAINT pk_employees PRIMARY KEY(employee_id)
+);
+
+INSERT INTO employees VALUES(1, 'Boss', 1);
+INSERT INTO employees VALUES(3, 'Alice', 3);
+INSERT INTO employees VALUES(2, 'Bob', 1);
+INSERT INTO employees VALUES(4, 'Daniel', 2);
+INSERT INTO employees VALUES(7, 'Luis', 4);
+INSERT INTO employees VALUES(8, 'Jhon', 3);
+INSERT INTO employees VALUES(9, 'Angela', 8);
+INSERT INTO employees VALUES(77, 'Robert', 1);
+
+
+Select employee_id from employees where employee_id <>1 and (manager_id =1 or manager_id in
+ (Select employee_id from employees 
+ where manager_id in(Select employee_id from employees where manager_id = 1) and employee_id <>1));
