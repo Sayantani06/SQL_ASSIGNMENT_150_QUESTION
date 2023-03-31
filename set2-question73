@@ -1,0 +1,51 @@
+Write an SQL query to find the average daily percentage of posts that got removed after being reported as spam, rounded to 2 decimal places.
+
+USE POPULATION;
+
+CREATE TABLE actions
+(
+  user_id INT,
+  post_id INT,
+  action_date DATE,
+  action VARCHAR(15),
+  extra VARCHAR(25)
+);
+
+CREATE TABLE removals
+(
+  post_id INT,
+  remove_date DATE
+);
+
+INSERT INTO actions VALUES(1, 1, '2019-07-01','view', null);
+INSERT INTO actions VALUES(1, 1, '2019-07-01', 'like', null);
+INSERT INTO actions VALUES(1, 1, '2019-07-01', 'share', null);
+INSERT INTO actions VALUES(2, 2, '2019-07-04', 'view', null);
+INSERT INTO actions VALUES(2, 2, '2019-07-04', 'report', 'spam');
+INSERT INTO actions VALUES(3, 4, '2019-07-04', 'view', null);
+INSERT INTO actions VALUES(3, 4, '2019-07-04', 'report', 'spam');
+INSERT INTO actions VALUES(4, 3, '2019-07-02', 'view', null);
+INSERT INTO actions VALUES(4, 3, '2019-07-02', 'report', 'spam');
+INSERT INTO actions VALUES(5, 2, '2019-07-03', 'view', null);
+INSERT INTO actions VALUES(5, 2, '2019-07-03', 'report', 'racism');
+INSERT INTO actions VALUES(5, 5, '2019-07-03', 'view', null);
+INSERT INTO actions VALUES(5, 5, '2019-07-03', 'report', 'racism');
+
+INSERT INTO removals VALUES(2, '2019-07-20');
+INSERT INTO removals VALUES(3, '2019-07-18');
+
+WITH SPAM_COUNT(total_c,action_date,extra) AS
+(SELECT COUNT(ACTION_DATE) AS TOTAL_C,ACTION_DATE,EXTRA FROM ACTIONS 
+WHERE EXTRA='SPAM' 
+GROUP BY ACTION_DATE,EXTRA),
+REMOVAL_STAT(post_id,tot_count,action_date,extra ) AS
+ (SELECT REMOVALS.POST_ID as post_id,COUNT( ACTION_DATE) AS TOT_COUNT, ACTION_DATE, EXTRA 
+FROM ACTIONS JOIN REMOVALS ON ACTIONS.POST_ID=REMOVALS.POST_ID
+GROUP BY REMOVALS.POST_ID,ACTION_DATE,EXTRA
+HAVING EXTRA='SPAM'),
+Removal_percent (percent,action_date) as
+(SELECT (REMOVAL_STAT.TOT_COUNT)/(SPAM_COUNT.TOTAL_C)*100 AS PERCENT, REMOVAL_STAT.ACTION_DATE
+FROM SPAM_COUNT JOIN REMOVAL_STAT ON SPAM_COUNT.ACTION_DATE=REMOVAL_STAT.ACTION_DATE)
+Select sum(percent)/count(*) as avg_daily_percent from removal_percent;
+
+
