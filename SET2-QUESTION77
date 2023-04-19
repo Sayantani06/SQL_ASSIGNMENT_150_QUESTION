@@ -1,0 +1,45 @@
+
+
+
+
+WITH variables_with_val AS(
+  SELECT 
+    e.left_operand,
+    e.right_operand,
+    e.operator,
+    MAX(CASE
+      WHEN e.left_operand = v.name
+        THEN v.value
+    END) as first_var,
+    MAX(CASE
+      WHEN e.right_operand = v.name
+        THEN v.value
+    END) as second_var
+  FROM
+    expressions e
+    JOIN variables v 
+      ON e.left_operand = v.name
+        OR e.right_operand = v.name
+  GROUP BY
+    left_operand,
+    right_operand,
+    operator
+)
+SELECT
+  left_operand,
+  operator,
+  right_operand,
+  CASE
+    WHEN operator = '<'
+      THEN 
+        IF(first_var < second_var, 'true', 'false')
+    WHEN operator = '>'
+      THEN 
+        IF(first_var > second_var, 'true', 'false')
+    WHEN operator = '='
+      THEN 
+        IF(first_var = second_var, 'true', 'false')
+  END value
+FROM
+  variables_with_val
+;
